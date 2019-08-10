@@ -9,6 +9,7 @@ let gulp            =   require('gulp'),
     cssmin          =   require('gulp-cssmin'),
     browserSync     =   require('browser-sync'),
     concat          =   require('gulp-concat'),
+    strip           =   require('gulp-strip-comments'),
     del             =   require('del'),
     fs              =   require('fs');
 
@@ -47,6 +48,7 @@ gulp.task('scripts:update-list', (done) => {
 gulp.task('scripts', () => {
     return gulp.src(files)
         .pipe(concat('scripts.js'))
+        .pipe(strip())
         .pipe(sourcemaps.init())
         .pipe(gulp.dest('src/js'))
         .pipe(rename({suffix: '.min'}))
