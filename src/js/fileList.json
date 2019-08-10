@@ -1,0 +1,6 @@
+{
+  "files": [
+    "libs/jquery/dist/jquery.js",
+    "js/common.js"
+  ]
+}
