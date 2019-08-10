@@ -10,7 +10,6 @@ let gulp            =   require('gulp'),
     browserSync     =   require('browser-sync'),
     concat          =   require('gulp-concat'),
     strip           =   require('gulp-strip-comments'),
-    stripCss        =   require('gulp-strip-css-comments'),
     del             =   require('del'),
     fs              =   require('fs');
 
@@ -69,7 +68,7 @@ gulp.task('styles', () => {
         }))
         .pipe(gulp.dest('src/css'))
         .pipe(rename({suffix: '.min'}))
-        .pipe(stripCss())
+        .pipe(strip.text())
         .pipe(sourcemaps.init())
         .pipe(cssmin())
         .pipe(sourcemaps.write())
