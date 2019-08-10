@@ -10,6 +10,7 @@ let gulp            =   require('gulp'),
     browserSync     =   require('browser-sync'),
     concat          =   require('gulp-concat'),
     strip           =   require('gulp-strip-comments'),
+    stripCss        =   require('gulp-strip-css-comments'),
     del             =   require('del'),
     fs              =   require('fs');
 
@@ -48,10 +49,10 @@ gulp.task('scripts:update-list', (done) => {
 gulp.task('scripts', () => {
     return gulp.src(files)
         .pipe(concat('scripts.js'))
-        .pipe(strip())
-        .pipe(sourcemaps.init())
         .pipe(gulp.dest('src/js'))
         .pipe(rename({suffix: '.min'}))
+        .pipe(strip())
+        .pipe(sourcemaps.init())
         .pipe(uglify())
         .pipe(sourcemaps.write())
         .pipe(gulp.dest('src/js'));
@@ -66,9 +67,10 @@ gulp.task('styles', () => {
             browsers: ['last 15 versions'],
             cascade: true
         }))
-        .pipe(sourcemaps.init())
         .pipe(gulp.dest('src/css'))
         .pipe(rename({suffix: '.min'}))
+        .pipe(stripCss())
+        .pipe(sourcemaps.init())
         .pipe(cssmin())
         .pipe(sourcemaps.write())
         .pipe(gulp.dest('src/css'));
@@ -92,7 +94,7 @@ gulp.task('watch', gulp.series('watch:pre', 'watch:init'));
 
 //Build tasks
 
-gulp.task('build:pre', gulp.series('styles', 'scripts'));
+gulp.task('build:pre', gulp.series('scripts:update-list', 'styles', 'scripts'));
 
 gulp.task('build:clean', (done) => {
     del(['dist/'], {force: true});
@@ -107,6 +109,7 @@ gulp.task('build:copy', (done) => {
         .pipe(gulp.dest('dist/js'));
 
     gulp.src('src/*.html')
+        .pipe(strip())
         .pipe(gulp.dest('dist/'));
 
     gulp.src('src/img/*.*')
